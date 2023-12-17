@@ -1,5 +1,5 @@
 import shutil
-import subprocess
+import subprocess  # nosec
 import tempfile
 from pathlib import Path
 from typing import Literal
@@ -10,10 +10,10 @@ from whisper.utils import WriteSRT
 
 def run_command(command_list: list[str]) -> str:
     try:
-        result = subprocess.run(command_list, check=True, text=True, capture_output=True)
+        result = subprocess.run(command_list, check=True, text=True, capture_output=True)  # nosec
         return result.stdout
     except subprocess.CalledProcessError as e:
-        print(f"The command '{command_list}' failed with error:\n{str(e)}")
+        print(f"The command '{command_list}' failed with error:\n{e!s}")
         print(e.stdout)
         print(e.stderr)
 
@@ -27,22 +27,22 @@ def extract_audio_from_video(video_path: str, temp_dir: str) -> Path:
 
 
 def get_text_from_audio(
-        audio_file: Path,
-        temp_dir: str,
-        model_name: Literal['tiny', 'base', 'small', 'medium', 'large'] = 'small',
-        verbose: bool | None = None
+    audio_file: Path,
+    temp_dir: str,
+    model_name: Literal['tiny', 'base', 'small', 'medium', 'large'] = 'small',
+    verbose: bool | None = None,
 ) -> Path:
     model = load_model(model_name)
     result = model.transcribe(str(audio_file), verbose=verbose)
 
     # write SRT file
-    text_file = (Path(temp_dir) / 'text.srt')
+    text_file = Path(temp_dir) / 'text.srt'
     WriteSRT(temp_dir).write_result(result, text_file.open('w', encoding='utf-8'))
     return text_file
 
 
 def create_video_with_subtitles(
-        video_path: str, srt_file: Path, output_dir: str | None = None, output_file: str = 'output.mp4'
+    video_path: str, srt_file: Path, output_dir: str | None = None, output_file: str = 'output.mp4'
 ) -> None:
     current_dir = Path(__file__).parent
     output_dir = current_dir if output_dir is None else Path(output_dir)
@@ -62,4 +62,5 @@ def main(video_path: str) -> None:
 
 if __name__ == '__main__':
     import sys
+
     main(sys.argv[1])
