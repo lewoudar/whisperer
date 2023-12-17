@@ -3,13 +3,20 @@ name = "whisperer"
 version = "0.1.0"
 description = "A command line utility for transcribing audio and video files"
 authors = ["le_woudar <rollandkev@yahoo.fr>"]
-license = "MIT"
+license = "Apache-2.0"
 readme = "README.md"
+
+packages = [
+    { include = "whisperer" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 openai-whisper = {git = "https://github.com/openai/whisper.git"}
 click = "^8.1.7"
+click-didyoumean = "^0.3.0"
+shellingham = "^1.5.4"
+rich = "^13.7.0"
 
 
 [tool.poetry.group.lint.dependencies]
@@ -20,6 +27,9 @@ bandit = "^1.7.6"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.6.0"
 commitizen = "^3.13.0"
+
+[tool.poetry.scripts]
+whp = "whisperer.main:cli"
 
 [tool.ruff]
 line-length = 120
