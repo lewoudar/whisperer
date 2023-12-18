@@ -1,6 +1,7 @@
 # Whisperer
 
-It is a fun project I started to complement this article where I introduce
+It is a fun project I started to complement
+my [article](https://open.substack.com/pub/lewoudar/p/discover-an-elegant-speech-to-text) where I introduce
 the [whisper](https://github.com/openai/whisper) project.
 
 It is a command line you can use to transcribe audio files or create subtitles for your videos.
