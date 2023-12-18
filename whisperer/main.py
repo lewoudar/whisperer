@@ -36,18 +36,21 @@ def cli():
     $ whp audio transcribe audio.mp3 -f json -f srt
 
     \b
-    # create subtitle for your video
-    $ whp video subtitle video.mp4 -o video_with_subtitle.mp4
-
-    \b
     # extract an audio file from a video file
     $ whp video ea video.mp4 -o audio.mp3
 
     \b
     # create video with subtitles
     $ whp video subtitles video.mp4 -o video_with_subtitles.mp4
+
+    \b
+    # specify the whisper model to use and the source language of the video
+    $ whp video subtitles video.mp4 -l en -m medium -o video_with_subtitles.mp4
     """
 
 
 for command in [install_completion, audio, video]:
     cli.add_command(command)
+
+if __name__ == '__main__':
+    cli()
