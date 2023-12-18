@@ -1,6 +1,7 @@
 import click
 from click_didyoumean import DYMGroup
 
+from .commands.audio import audio
 from .commands.completion import install_completion
 
 
@@ -39,9 +40,9 @@ def cli():
 
     \b
     # extract an audio file from a video file
-    $ whp video extract video.mp4 -o audio.mp3
+    $ whp video ea video.mp4 -o audio.mp3
     """
 
 
-for command in [install_completion]:
+for command in [install_completion, audio]:
     cli.add_command(command)
