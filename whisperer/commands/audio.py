@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 import click
 
@@ -13,7 +14,7 @@ def audio():
 
 
 @audio.command()
-@click.argument('audio_files', type=click.Path(exists=True, dir_okay=False), nargs=-1)
+@click.argument('audio_files', type=click.Path(exists=True, dir_okay=False, path_type=pathlib.Path), nargs=-1)
 @click.option(
     '-f',
     '--format',
@@ -43,7 +44,7 @@ def audio():
 @click.option(
     '-d',
     '--directory',
-    type=click.Path(exists=True, file_okay=False),
+    type=click.Path(exists=True, file_okay=False, path_type=pathlib.Path),
     default=os.getcwd(),
     help='The directory where the transcribed files are stored. If not given, it will default to the current directory.',
 )

@@ -45,16 +45,15 @@ WRITER_MAPPING = {
 
 
 def _write_file(
-    audio_file: Path, format_: Literal['json', 'tsv', 'vtt', 'tsv', 'srt'], output_directory: str, result: dict
+    audio_file: Path, format_: Literal['json', 'tsv', 'vtt', 'tsv', 'srt'], output_directory: Path, result: dict
 ) -> None:
     console.print(f'writing {audio_file.stem}.{format_} file')
     writer_class = WRITER_MAPPING[format_]
-    writer = writer_class(output_directory)
+    writer = writer_class(str(output_directory))
     writer(result, str(audio_file))
 
 
-def write_files(audio_file: str, formats: list[Format], result: dict, output_directory: str) -> None:
-    audio_file = Path(audio_file)
+def write_files(audio_file: Path, formats: list[Format], result: dict, output_directory: Path) -> None:
     match formats:
         case ('all', *_):
             for format_ in WRITER_MAPPING:
