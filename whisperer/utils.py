@@ -1,4 +1,5 @@
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Literal
 
@@ -69,10 +70,28 @@ def _run_command(command_list: list[str]) -> str:
         result = subprocess.run(command_list, check=True, text=True, capture_output=True)  # nosec
         return result.stdout
     except subprocess.CalledProcessError as e:
-        print(f"The command '{command_list}' failed with error:\n{e!s}")
-        print(e.stdout)
+        console.print(f'[error]{e.stdout}')
+        raise SystemExit(1) from None
 
 
 def extract_audio_from_video(video_file: str, audio_file: str) -> None:
     command = ['ffmpeg', '-i', video_file, '-vn', '-ab', '192k', '-ar', '48000', '-y', audio_file]
     _run_command(command)
+
+
+def create_video_with_subtitles(video_file: str, output_file: str, language: str | None, model: ModelType) -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        audio_file = Path(temp_dir) / 'audio.mp3'
+        extract_audio_from_video(video_file, str(audio_file))
+        result = transcribe_audio_file(str(audio_file), model, language=language, task='transcribe', verbose=False)
+
+        # I don't create a srt_file in the temporary directory because I have a weird error
+        # when ffmpeg tries to remove backslashes on my Windows computer. I don't know if it is a
+        # Windows issue or a general one, but I have made this workaround solution.
+        srt_file = Path.cwd() / 'audio.srt'
+        with srt_file.open('w') as file:
+            utils.WriteSRT(temp_dir).write_result(result, file)
+
+        command = ['ffmpeg', '-i', video_file, '-vf', f'subtitles={srt_file.name}', '-y', output_file]
+        _run_command(command)
+        srt_file.unlink()

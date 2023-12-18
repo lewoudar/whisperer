@@ -42,6 +42,10 @@ def cli():
     \b
     # extract an audio file from a video file
     $ whp video ea video.mp4 -o audio.mp3
+
+    \b
+    # create video with subtitles
+    $ whp video subtitles video.mp4 -o video_with_subtitles.mp4
     """
 
 

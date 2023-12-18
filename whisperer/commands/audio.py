@@ -10,6 +10,7 @@ from whisperer.utils import check_model_language_consistency, transcribe_audio_f
 
 @click.group()
 def audio():
+    """Audio related subcommands."""
     pass
 
 
