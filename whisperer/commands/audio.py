@@ -5,7 +5,7 @@ import click
 
 from whisperer.console import console
 from whisperer.types import Format, ModelType
-from whisperer.utils import transcribe_audio_file, write_files, check_model_language_consistency
+from whisperer.utils import check_model_language_consistency, transcribe_audio_file, write_files
 
 
 @click.group()
@@ -51,13 +51,13 @@ def audio():
 @click.option('--translate', is_flag=True, help='Transcribe and directly translate to English language.')
 @click.option('--verbose', is_flag=True, help='Print debug information about the file being processed.')
 def transcribe(
-    audio_files: list[str],
+    audio_files: list[pathlib.Path],
     formats: list[Format],
     model: ModelType,
     verbose: bool,
     language: str | None,
     translate: bool,
-    directory: str,
+    directory: pathlib.Path,
 ) -> None:
     """
     Transcribe audio files (AUDIO_FILES) in different output formats.
@@ -87,7 +87,7 @@ def transcribe(
     """
     check_model_language_consistency(model, language)
     for audio_file in audio_files:
-        console.print(f'[info]processing file {audio_file}')
+        console.print(f'[info]processing file {audio_file} :gear:')
         task = 'translate' if translate else 'transcribe'
         result = transcribe_audio_file(audio_file, model, language=language, verbose=verbose, task=task)
         write_files(audio_file, formats, result, directory)

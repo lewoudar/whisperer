@@ -15,7 +15,6 @@ def run_command(command_list: list[str]) -> str:
     except subprocess.CalledProcessError as e:
         print(f"The command '{command_list}' failed with error:\n{e!s}")
         print(e.stdout)
-        print(e.stderr)
 
 
 def extract_audio_from_video(video_path: str, temp_dir: str) -> Path:

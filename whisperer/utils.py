@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 from typing import Literal
 
@@ -61,3 +62,17 @@ def write_files(audio_file: Path, formats: list[Format], result: dict, output_di
         case _:
             for format_ in formats:
                 _write_file(audio_file, format_, output_directory, result)
+
+
+def _run_command(command_list: list[str]) -> str:
+    try:
+        result = subprocess.run(command_list, check=True, text=True, capture_output=True)  # nosec
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"The command '{command_list}' failed with error:\n{e!s}")
+        print(e.stdout)
+
+
+def extract_audio_from_video(video_file: str, audio_file: str) -> None:
+    command = ['ffmpeg', '-i', video_file, '-vn', '-ab', '192k', '-ar', '48000', '-y', audio_file]
+    _run_command(command)
