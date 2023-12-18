@@ -4,7 +4,7 @@ import click
 
 from whisperer.console import console
 from whisperer.types import Format, ModelType
-from whisperer.utils import transcribe_audio_file, write_files
+from whisperer.utils import transcribe_audio_file, write_files, check_model_language_consistency
 
 
 @click.group()
@@ -35,7 +35,7 @@ def audio():
     '--model',
     default='base',
     show_default=True,
-    help='The Whisper model to use. The "*.en" version are specific to the English language.',
+    help='The Whisper model to use. The "*.en" versions are specific to the English language.',
     type=click.Choice(
         ['tiny', 'tiny.en', 'base', 'base.en', 'small', 'small.en', 'medium', 'medium.en', 'large', 'large.en']
     ),
@@ -45,7 +45,7 @@ def audio():
     '--directory',
     type=click.Path(exists=True, file_okay=False),
     default=os.getcwd(),
-    help='The directory where the transcribed files are stored. If not given, it will default to the current directory.'
+    help='The directory where the transcribed files are stored. If not given, it will default to the current directory.',
 )
 @click.option('--translate', is_flag=True, help='Transcribe and directly translate to English language.')
 @click.option('--verbose', is_flag=True, help='Print debug information about the file being processed.')
@@ -56,7 +56,7 @@ def transcribe(
     verbose: bool,
     language: str | None,
     translate: bool,
-    directory: str
+    directory: str,
 ) -> None:
     """
     Transcribe audio files (AUDIO_FILES) in different output formats.
@@ -84,6 +84,7 @@ def transcribe(
     \b transcribe an audio file from german to english
     $ whp audio transcribe audio.mp3 -l de --translate
     """
+    check_model_language_consistency(model, language)
     for audio_file in audio_files:
         console.print(f'[info]processing file {audio_file}')
         task = 'translate' if translate else 'transcribe'

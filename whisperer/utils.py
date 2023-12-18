@@ -16,12 +16,20 @@ def _get_fp16_option() -> bool:
     return torch.cuda.is_available()
 
 
+def check_model_language_consistency(model: ModelType, language: str | None) -> None:
+    if language is not None and model.endswith('.en') and language.lower() not in ('en', 'english'):
+        console.print(
+            '[error]Models finishing with [bold].en[/bold] are specific to the [bold]English[/bold] language.'
+        )
+        raise SystemExit(-1)
+
+
 def transcribe_audio_file(
-        audio_file: str,
-        model_name: ModelType,
-        language: str | None = None,
-        task: TaskType = 'transcribe',
-        verbose: bool | None = None,
+    audio_file: str,
+    model_name: ModelType,
+    language: str | None = None,
+    task: TaskType = 'transcribe',
+    verbose: bool | None = None,
 ) -> dict:
     model = load_model(model_name)
     return model.transcribe(str(audio_file), verbose=verbose, language=language, task=task, fp16=_get_fp16_option())
@@ -37,7 +45,7 @@ WRITER_MAPPING = {
 
 
 def _write_file(
-        audio_file: Path, format_: Literal['json', 'tsv', 'vtt', 'tsv', 'srt'], output_directory: str, result: dict
+    audio_file: Path, format_: Literal['json', 'tsv', 'vtt', 'tsv', 'srt'], output_directory: str, result: dict
 ) -> None:
     console.print(f'writing {audio_file.stem}.{format_} file')
     writer_class = WRITER_MAPPING[format_]
