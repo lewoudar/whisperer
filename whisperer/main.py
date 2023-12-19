@@ -1,9 +1,9 @@
 import click
 from click_didyoumean import DYMGroup
 
-from .commands.audio import audio
-from .commands.completion import install_completion
-from .commands.video import video
+from whisperer.commands.audio import audio
+from whisperer.commands.completion import install_completion
+from whisperer.commands.video import video
 
 
 @click.version_option('0.1.0', message='%(prog)s version %(version)s')
