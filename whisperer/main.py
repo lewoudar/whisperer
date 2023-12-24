@@ -1,11 +1,12 @@
 import click
 from click_didyoumean import DYMGroup
-
+from trogon import tui
 from whisperer.commands.audio import audio
 from whisperer.commands.completion import install_completion
 from whisperer.commands.video import video
 
 
+@tui()
 @click.version_option('0.1.0', message='%(prog)s version %(version)s')
 @click.group(cls=DYMGroup, context_settings={'help_option_names': ['-h', '--help']})
 def cli():
